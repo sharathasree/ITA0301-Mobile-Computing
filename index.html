@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyclone Disaster Communication & Emergency Network</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="loginScreen" class="login-screen">
+  <div class="login-grid">
+    <div class="login-visual">
+      <div class="brand-mark">✦</div>
+      <span class="eyebrow">EMERGENCY NETWORK CONTROL</span>
+      <h1>Cyclone Disaster<br><span>Communication</span><br>& Emergency Network</h1>
+      <p>Rapidly deploy a Cell on Wheels, restore coverage, route rescue traffic and monitor a resilient emergency mesh.</p>
+      <div class="login-stats">
+        <div><strong>24/7</strong><small>Emergency Ops</small></div>
+        <div><strong>5G</strong><small>Ready Backhaul</small></div>
+        <div><strong>99.2%</strong><small>Target Reliability</small></div>
+      </div>
+    </div>
+    <div class="login-panel">
+      <div class="login-card">
+        <div class="logo-circle">◉</div>
+        <h2>Control Center Login</h2>
+        <p>Sign in to access the disaster communications console.</p>
+        <form id="loginForm">
+          <label>Operator ID<input id="operator" value="admin" required></label>
+          <label>Password<input id="password" type="password" value="admin123" required></label>
+          <button class="primary-btn full" type="submit">ACCESS CONTROL CENTER <span>→</span></button>
+        </form>
+        <div class="demo-login">Demo credentials: <b>admin</b> / <b>admin123</b></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="app" class="app hidden">
+  <aside class="sidebar">
+    <div class="side-brand"><div class="brand-mark small">✦</div><div><b>CYCLONE<span>NET</span></b><small>Emergency Control</small></div></div>
+    <nav>
+      <a class="nav-link active" data-section="overview">⌂ <span>Command Overview</span></a>
+      <a class="nav-link" data-section="map">⌖ <span>Disaster Map</span></a>
+      <a class="nav-link" data-section="cow">◈ <span>COW Deployment</span></a>
+      <a class="nav-link" data-section="mobileip">⇄ <span>Mobile IP</span></a>
+      <a class="nav-link" data-section="aodv">⌁ <span>AODV Routing</span></a>
+      <a class="nav-link" data-section="handoff">↻ <span>Network Handoff</span></a>
+      <a class="nav-link" data-section="comparison">▦ <span>Network Technologies</span></a>
+      <a class="nav-link" data-section="partition">⚠ <span>Partition Lab</span></a>
+      <a class="nav-link" data-section="alerts">! <span>Emergency Alerts</span></a>
+      <a class="nav-link" data-section="analysis">◫ <span>Performance Analysis</span></a>
+      <a class="nav-link" data-section="report">▤ <span>Reports</span></a>
+    </nav>
+    <div class="side-bottom">
+      <div class="mini-status"><i></i><div><b>Network online</b><small>All systems monitored</small></div></div>
+      <button id="logoutBtn" class="logout">↪ Sign out</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <button id="menuBtn" class="icon-btn">☰</button>
+      <div class="top-title"><span>DISASTER OPERATIONS</span><h3 id="pageTitle">Command Overview</h3></div>
+      <div class="top-actions">
+        <div class="live-pill"><i></i> LIVE SIMULATION</div>
+        <div id="clock">--:--:--</div>
+        <button class="icon-btn" id="alertBell">🔔<em id="alertCount">0</em></button>
+        <div class="operator-chip">AD <span>Admin Operator</span></div>
+      </div>
+    </header>
+
+    <div class="content">
+      <section id="overview" class="page active-page">
+        <div class="hero-row">
+          <div>
+            <span class="eyebrow">CYCLONE RESPONSE • COASTAL DISTRICT</span>
+            <h1>Emergency Network Command Center</h1>
+            <p>Coordinate resilient connectivity across damaged villages, relief camps and mobile response teams.</p>
+          </div>
+          <button id="startSimulation" class="danger-btn">⚡ START DISASTER SIMULATION</button>
+        </div>
+        <div class="metric-grid" id="metricGrid"></div>
+        <div class="dashboard-grid">
+          <div class="panel map-panel">
+            <div class="panel-head"><div><span class="eyebrow">LIVE SITUATIONAL MAP</span><h3>Connectivity & Response Nodes</h3></div><button class="ghost-btn" data-go="map">OPEN FULL MAP ↗</button></div>
+            <div id="overviewMap" class="map"></div>
+            <div class="map-legend">
+              <span><i class="dot cow"></i>COW</span><span><i class="dot active"></i>Active Link</span><span><i class="dot mip"></i>Mobile IP</span><span><i class="dot adhoc"></i>Ad-Hoc</span><span><i class="dot fail"></i>Failed</span>
+            </div>
+          </div>
+          <div class="panel alert-panel">
+            <div class="panel-head"><div><span class="eyebrow">EVENT STREAM</span><h3>Emergency Alerts</h3></div><button class="ghost-btn" data-go="alerts">VIEW ALL</button></div>
+            <div id="alertFeed" class="alert-feed"></div>
+          </div>
+        </div>
+        <div class="dashboard-grid lower">
+          <div class="panel">
+            <div class="panel-head"><div><span class="eyebrow">NETWORK HEALTH</span><h3>Performance Snapshot</h3></div><select id="overviewMetric"><option value="delivery">Packet Delivery</option><option value="delay">Average Delay</option><option value="reliability">Reliability</option></select></div>
+            <div class="chart-wrap"><canvas id="overviewChart"></canvas></div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><div><span class="eyebrow">CONTROL PARAMETERS</span><h3>Simulation Inputs</h3></div><span class="live-tag">AUTO UPDATE</span></div>
+            <div class="slider-list" id="quickControls"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="map" class="page">
+        <div class="section-head"><div><span class="eyebrow">GEO-SPATIAL OPERATIONS</span><h1>Disaster Zone Map</h1><p>Track response assets, coverage and communication paths.</p></div><button id="resetMap" class="ghost-btn">↺ RESET SCENARIO</button></div>
+        <div class="panel big-map-panel"><div id="mainMap" class="map main-map"></div><div class="map-legend big"><span><i class="dot cow"></i>COW Base Station</span><span><i class="dot active"></i>Active</span><span><i class="dot mip"></i>Mobile IP</span><span><i class="dot adhoc"></i>Ad-Hoc</span><span><i class="dot fail"></i>Failed</span></div></div>
+        <div class="node-cards" id="nodeCards"></div>
+      </section>
+
+      <section id="cow" class="page">
+        <div class="section-head"><div><span class="eyebrow">RAPID DEPLOYMENT UNIT</span><h1>Cell on Wheels (COW)</h1><p>Restore cellular coverage using a rapidly deployable temporary base station.</p></div><button id="deployCow" class="primary-btn">DEPLOY COW</button></div>
+        <div class="cow-grid">
+          <div class="panel architecture"><div class="panel-head"><div><span class="eyebrow">CELLULAR ARCHITECTURE</span><h3>Emergency Connectivity Stack</h3></div><span class="status-badge" id="cowStatus">STANDBY</span></div><div class="arch-flow"><div>📱<b>Mobile Station</b><small>Users & devices</small></div><span>→</span><div>📡<b>BTS</b><small>Radio access</small></div><span>→</span><div>🎛<b>BSC</b><small>Radio control</small></div><span>→</span><div>🔁<b>MSC</b><small>Switching</small></div><span>→</span><div>☁<b>Core Network</b><small>Backhaul & services</small></div></div><div class="deploy-progress"><div class="progress-label"><span>Deployment readiness</span><b id="cowProgressText">0%</b></div><div class="progress"><i id="cowProgress"></i></div></div></div>
+          <div class="panel cow-stats"><span class="eyebrow">COW TELEMETRY</span><h3>Deployment Status</h3><div class="telemetry" id="cowTelemetry"></div></div>
+        </div>
+        <div class="panel"><div class="panel-head"><div><span class="eyebrow">COVERAGE MODEL</span><h3>Dynamic COW Coverage</h3></div><span class="live-tag">SIMULATED</span></div><div class="coverage-bar"><span id="coverageFill"></span></div><div class="coverage-labels"><span>0 km</span><b id="coverageValue">12 km effective radius</b><span>25 km</span></div></div>
+      </section>
+
+      <section id="mobileip" class="page">
+        <div class="section-head"><div><span class="eyebrow">MOBILITY MANAGEMENT</span><h1>Mobile IP Simulation</h1><p>Visualize registration, Care-of Address assignment, packet transmission and handoff.</p></div><button id="runMobileIP" class="primary-btn">▶ RUN MOBILE IP</button></div>
+        <div class="mobile-grid">
+          <div class="panel mobile-stage"><div class="network-diagram" id="mobileDiagram"><div class="net-node ha">HA<small>Home Agent</small></div><div class="net-line"></div><div class="net-node fa">FA<small>Foreign Agent</small></div><div class="net-line"></div><div class="net-node mn">MN<small>Mobile Node</small></div><div class="packet p1">●</div></div><div class="step-track" id="mobileSteps"></div></div>
+          <div class="panel results-panel"><span class="eyebrow">SESSION TELEMETRY</span><h3>Registration & Packet Flow</h3><div id="mobileResults" class="result-grid"></div></div>
+        </div>
+        <div class="panel"><div class="panel-head"><div><span class="eyebrow">PROTOCOL FLOW</span><h3>Mobile IP Event Log</h3></div></div><div id="mobileLog" class="terminal"></div></div>
+      </section>
+
+      <section id="aodv" class="page">
+        <div class="section-head"><div><span class="eyebrow">MOBILE AD-HOC NETWORK</span><h1>Ad-Hoc AODV Routing</h1><p>Discover a multi-hop route using Route Request (RREQ) and Route Reply (RREP).</p></div><button id="runAodv" class="primary-btn">DISCOVER ROUTE</button></div>
+        <div class="aodv-controls panel"><label>Source<select id="aodvSource"></select></label><label>Destination<select id="aodvDest"></select></label><button id="partitionToggle" class="ghost-btn">SIMULATE PARTITION</button></div>
+        <div class="panel"><div id="aodvCanvas" class="aodv-canvas"></div><div class="route-result" id="routeResult">Select nodes and discover a route.</div></div>
+        <div class="dashboard-grid"><div class="panel"><span class="eyebrow">AODV EVENT TRACE</span><h3>RREQ → RREP</h3><div id="aodvLog" class="terminal"></div></div><div class="panel"><span class="eyebrow">ROUTING METRICS</span><h3>Discovered Path</h3><div id="aodvMetrics" class="result-grid"></div></div></div>
+      </section>
+
+      <section id="handoff" class="page">
+        <div class="section-head"><div><span class="eyebrow">MOBILITY & CONTINUITY</span><h1>Network Handoff Simulation</h1><p>Move a rescue vehicle beyond COW coverage and maintain communication through a surviving network segment.</p></div><button id="runHandoff" class="primary-btn">START HANDOFF</button></div>
+        <div class="panel handoff-stage"><div class="road"><div class="coverage-circle"></div><div class="survivor-cell">📡<small>Surviving Network</small></div><div id="rescueVehicle" class="vehicle">🚑</div><div class="route-road"></div><span class="zone-label cow-zone">COW COVERAGE</span><span class="zone-label survivor-zone">SURVIVING SEGMENT</span></div><div class="handoff-stats" id="handoffStats"></div></div>
+        <div class="panel"><div class="panel-head"><div><span class="eyebrow">SIGNAL CONTINUITY</span><h3>Handoff Timeline</h3></div></div><div class="timeline" id="handoffTimeline"></div></div>
+      </section>
+
+      <section id="comparison" class="page">
+        <div class="section-head"><div><span class="eyebrow">NETWORK TECHNOLOGY LAB</span><h1>Access Technology Comparison</h1><p>Compare channel access methods and cellular generations for disaster communication.</p></div></div>
+        <div class="tech-tabs" id="techTabs"><button class="active" data-tech="FDMA">FDMA</button><button data-tech="TDMA">TDMA</button><button data-tech="CDMA">CDMA</button><button data-tech="OFDMA">OFDMA</button></div>
+        <div class="panel tech-detail" id="techDetail"></div>
+        <div class="generation-grid" id="generationGrid"></div>
+      </section>
+
+      <section id="partition" class="page">
+        <div class="section-head"><div><span class="eyebrow">RESILIENCE LAB</span><h1>Network Partition Simulation</h1><p>Break a route, detect the partition and allow AODV to search for an alternate path.</p></div><button id="runPartition" class="danger-btn">TRIGGER PARTITION</button></div>
+        <div class="panel partition-stage"><div class="partition-map" id="partitionMap"></div><div id="partitionStatus" class="partition-status"><b>NETWORK STABLE</b><span>All critical nodes have a reachable route.</span></div></div>
+        <div class="dashboard-grid"><div class="panel"><span class="eyebrow">FAILURE IMPACT</span><h3>Before vs After Partition</h3><div class="bar-compare" id="partitionBars"></div></div><div class="panel"><span class="eyebrow">RECOVERY ACTION</span><h3>Resilience Engine</h3><div id="recoveryLog" class="terminal"></div></div></div>
+      </section>
+
+      <section id="alerts" class="page">
+        <div class="section-head"><div><span class="eyebrow">MISSION EVENTS</span><h1>Emergency Alert Center</h1><p>Critical communication and infrastructure events from the simulation.</p></div><button id="clearAlerts" class="ghost-btn">CLEAR EVENTS</button></div>
+        <div class="alert-toolbar"><button class="active" data-filter="all">All</button><button data-filter="critical">Critical</button><button data-filter="warning">Warning</button><button data-filter="info">Info</button></div>
+        <div id="alertsFull" class="full-alerts"></div>
+      </section>
+
+      <section id="analysis" class="page">
+        <div class="section-head"><div><span class="eyebrow">PERFORMANCE ANALYTICS</span><h1>Network Performance Analysis</h1><p>Compare Mobile IP and Ad-Hoc AODV under changing network conditions.</p></div><button id="randomizeMetrics" class="ghost-btn">↻ RANDOMIZE TEST</button></div>
+        <div class="panel"><div class="chart-tabs" id="chartTabs"><button class="active" data-chart="delivery">Packet Delivery Rate</button><button data-chart="delay">Average Delay</button><button data-chart="reliability">Reliability</button><button data-chart="loss">Packet Loss</button></div><div class="large-chart"><canvas id="performanceChart"></canvas></div></div>
+        <div class="metric-grid" id="analysisMetrics"></div>
+        <div class="panel"><div class="panel-head"><div><span class="eyebrow">LIVE PARAMETERS</span><h3>Scenario Controls</h3></div></div><div class="control-grid" id="analysisControls"></div></div>
+      </section>
+
+      <section id="report" class="page">
+        <div class="section-head"><div><span class="eyebrow">MISSION DOCUMENTATION</span><h1>Generate Incident Report</h1><p>Compile the current simulation state into a professional operational report.</p></div><button id="generateReport" class="primary-btn">GENERATE REPORT</button></div>
+        <div class="panel report-preview" id="reportPreview"><div class="report-empty">Click <b>Generate Report</b> to compile network status, deployment events, routing performance and alerts.</div></div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
